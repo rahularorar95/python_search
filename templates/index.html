@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Search API</title>
+    <meta charset="utf-8">
+    <script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+    <link rel="stylesheet" type= "text/css" href="{{ url_for('static',filename='styles/style.css') }}">
+    <script>
+      function search(term)
+      {
+        term = term.trim();
+        if(term.length >= 3){
+          $.ajax(
+          {
+            url: "/",
+            type: "POST",
+            data: JSON.stringify(term),
+            contentType: "application/json",
+            success: function(data)
+            {
+              data = JSON.parse(data)
+              var res= "<b>"+"Sorry No results found..."+"</b>";
+              if(data.results.length>0){
+                var res = "<b>"+"Best possible matches: "+"</b><ul class='column'>";
+                for(i in data.results){
+                  res += "<li class='box4'><p>"+data.results[i][0]+"</p><p> Match :"+data.results[i][1]+"%</p></li>";
+                }
+                res+="</ul>";
+              }
+              $("#results").html(res);
+            }
+
+          });
+        }else{
+          $("#results").html("");
+        }
+      }
+    </script>
+  </head>
+  <body>
+  <center>
+    <h1> Search API</h1><p>( Enter minimum 3 chracters )</p>
+    <hr/>
+    <div class="outer-input" >
+      <div class="input">
+            <input type="text" name="name" class="question" id="nme" required onkeyup="search(this.value)"/>
+            <label htmlFor="nme"><span>Enter your search query </span></label>
+        </div>
+      </div>
+      <br/>
+      <div id="results"></div>
+  </center>
+  </body>
+</html>
